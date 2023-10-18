@@ -22,6 +22,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Update history
 ======================================
-2023/09/06:  Development started in YOutube broadcast.  
+2023/09/06:  Development started in Youtube broadcast.  
 2023/10/04:  Implemented command line execution function.  
 2023/10/19:  First commit version 0.1.  
