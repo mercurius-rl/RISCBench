@@ -1,5 +1,5 @@
 use eframe::*;
-use egui::Modifiers;
+use egui::{Modifiers, KeyboardShortcut};
 use std::{path::PathBuf, io::{BufReader, Read, BufWriter, Write}};
 use rfd::FileDialog;
 use std::fs;
@@ -43,8 +43,6 @@ impl MyEguiApp {
 impl App for MyEguiApp {
 	fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
 
-		let save = egui::KeyboardShortcut::new(Modifiers::CTRL, egui::Key::S);
-
 		egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
 			// The top panel is often a good place for a menu bar:
 
@@ -55,8 +53,7 @@ impl App for MyEguiApp {
 						if ui.button("Quit").clicked() {
 							frame.close();
 						}
-						if ui.button("Open")
-						.clicked() {
+						if ui.button("Open").clicked() {
 							if let Some(path) = FileDialog::new()
 							.add_filter("Assembly file", &["asm"])
 							.set_directory("../")
@@ -255,6 +252,38 @@ impl App for MyEguiApp {
 		});
 
 		egui::CentralPanel::default().show(ctx, |ui| {
+			let save = egui::KeyboardShortcut::new(Modifiers::CTRL, egui::Key::S);
+			ui.input_mut(|i| 
+				if i.consume_shortcut(&save) {
+					if let Some(p) = self.source_path.clone() {
+						if !p.is_file() {
+							if let Some(path) = FileDialog::new()
+							.add_filter("Assembly file", &["asm"])
+							.set_directory("../")
+							.save_file() {
+								self.source_path = Some(path.clone());
+							}
+						}
+						if let Some(path) = self.source_path.clone() {
+							let file = fs::File::create(path).unwrap();
+							let mut writer = BufWriter::new(file);
+							writer.write_all(self.source.as_bytes()).unwrap();
+						}
+					} else {
+						if let Some(path) = FileDialog::new()
+						.add_filter("Assembly file", &["asm"])
+						.set_directory("../")
+						.save_file() {
+							self.source_path = Some(path.clone());
+						}
+						if let Some(path) = self.source_path.clone() {
+							let file = fs::File::create(path).unwrap();
+							let mut writer = BufWriter::new(file);
+							writer.write_all(self.source.as_bytes()).unwrap();
+						}
+					}
+				}
+			);
 			
 			ui.set_max_height(frame.info().window_info.size.y - 180.0);
 			ui.set_min_height(frame.info().window_info.size.y - 180.0);
@@ -276,6 +305,8 @@ impl App for MyEguiApp {
 		});
 
 		egui::TopBottomPanel::bottom("bottom_panel").default_height(110.0).show(ctx, |ui| {
+			
+
 			ui.set_max_height(120.0);
 			ui.set_min_height(120.0);
 
