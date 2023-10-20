@@ -306,7 +306,6 @@ impl App for MyEguiApp {
 
 		egui::TopBottomPanel::bottom("bottom_panel").default_height(110.0).show(ctx, |ui| {
 			
-
 			ui.set_max_height(120.0);
 			ui.set_min_height(120.0);
 

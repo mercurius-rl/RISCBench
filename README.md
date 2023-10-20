@@ -25,3 +25,4 @@ Update history
 2023/09/06:  Development started in Youtube broadcast.  
 2023/10/04:  Implemented command line execution function.  
 2023/10/19:  First commit version 0.1.  
+2023/10/20:  Add save shortcut key(ctrl+s).  
